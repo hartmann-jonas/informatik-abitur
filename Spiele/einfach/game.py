@@ -7,7 +7,7 @@ FIELD_SIZE = (500-20)/GRID_SIZE  # Größe der Felder in Pixeln
 
 
 class LightsOut:
-    def __init__(self, root):
+    def __init__(self, root, backToMenu):
         # Hauptfenster übergeben
         self.root = root
 
@@ -16,7 +16,7 @@ class LightsOut:
         self.round_count = 0
 
         # Spielfenster erstellen
-        self.showGame()
+        self.showGame(backToMenu)
 
         # Zustände des Spiels initialisieren
         self.fields = {}
@@ -61,6 +61,7 @@ class LightsOut:
                 # Field beschreibt die Rechtecke (Kacheln) auf dem Canvas
                 # Diese sind werden mit color, wie oben für das Kachel definiert ausgefüllt
                 field = self.game.create_rectangle(x * FIELD_SIZE, y * FIELD_SIZE, (x + 1) * FIELD_SIZE, (y + 1) * FIELD_SIZE, fill=color, outline='black')
+                self.game.grid_configure(row=0, column=0, columnspan=GRID_SIZE)
                 # self.fields ist ein Dictionary, welches den Koordinaten den Kacheln Nummern (IDs) zuordnet
                 self.fields[(x, y)] = field
                 # Diese ID wird benötigt um den Kacheln (canvas rectangles) Events zuzuordnen
@@ -129,7 +130,7 @@ class LightsOut:
         self.build_grid()
 
     # Canvas für Spiel erstellen
-    def showGame(self):
+    def showGame(self, backToMenu):
         # Ändert den Titel des Fensters
         self.root.title("Lichter Aus - Spiel")
         # Erstellt das Spielfeld als Canvas
@@ -144,5 +145,8 @@ class LightsOut:
         self.rounds_label = tk.Label(self.root, text="Runde: 0", font=("Arial", 14))
         self.rounds_label.grid(row=GRID_SIZE + 1, column=0, columnspan=GRID_SIZE, pady=10)
 
+        self.solve_button = tk.Button(self.root, text="Menü", command=backToMenu)
+        self.solve_button.grid(row=GRID_SIZE + 2, column=0, columnspan=GRID_SIZE, pady=10)
+    
         self.reset_button = tk.Button(self.root, text="Zurücksetzen", command=self.reset)
-        self.reset_button.grid(row=GRID_SIZE + 3, column=0, pady=10)
+        self.reset_button.grid(row=GRID_SIZE + 3, column=0, columnspan=GRID_SIZE, pady=10)

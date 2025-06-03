@@ -39,13 +39,13 @@ class LightsOut():
         self.rounds_label.grid(row=2, column=0, columnspan=GRID_SIZE, pady=10)
 
         self.solve_button = tk.Button(self.root, text="Menü", command=backToMenu)
-        self.solve_button.grid(row=3, column=0, pady=10)
+        self.solve_button.grid(row=3, column=0, columnspan=GRID_SIZE, pady=10)
 
         self.solve_button = tk.Button(self.root, text="Lösen", command=self.solve)
-        self.solve_button.grid(row=4, column=0, pady=10)
+        self.solve_button.grid(row=4, column=0, columnspan=GRID_SIZE, pady=10)
 
         self.reset_button = tk.Button(self.root, text="Zurücksetzen", command=self.reset)
-        self.reset_button.grid(row=5, column=0, pady=10)
+        self.reset_button.grid(row=5, column=0, columnspan=GRID_SIZE, pady=10)
 
     def generate_states(self):
         print("Generiere Zustände")
@@ -74,23 +74,24 @@ class LightsOut():
                 # Wenn der Zustand des jeweiligen Feldes 1 (an) ist, dann wird das Feld gelb gefärbt
                 # wenn nicht dann schwarz
                 color = 'yellow' if self.states[y][x] == 1 else 'black'
-                # Field beschreibt die Rechtecke (Felder) auf dem Spielfeld (game)
+                # Field beschreibt die Rechtecke (Kacheln) auf dem Spielfeld (game)
                 # Diese sind werden mit color, wie oben für das Feld definiert ausgefüllt
-                field = self.game.create_rectangle(x * FIELD_SIZE, y * FIELD_SIZE, (x + 1) * FIELD_SIZE, (y + 1) * FIELD_SIZE, fill=color, outline='black', )
-                # self.fields ist ein Dictionary, welches den Koordinaten der Felder Nummern (IDs) zuordnet
+                field = self.game.create_rectangle(x * FIELD_SIZE, y * FIELD_SIZE, (x + 1) * FIELD_SIZE, (y + 1) * FIELD_SIZE, fill=color, outline='black')
+                self.game.grid_configure(row=0, column=0, columnspan=GRID_SIZE)
+                # self.fields ist ein Dictionary, welches den Koordinaten der Kacheln Nummern (IDs) zuordnet
                 self.fields[(x, y)] = field
-                # Diese ID wird benötigt um den Feldern (canvas rectangles) Events zuzuordnen
+                # Diese ID wird benötigt um den Kacheln (canvas rectangles) Events zuzuordnen
                 # Das Event bedeutet hier, dass ein Klich auf das Feld self.toggle(x, y) aufruft
                 self.game.tag_bind(field, '<Button-1>', lambda event, x=x, y=y: self.toggle(x, y))
 
     def toggle(self, x, y):
-        # Beim Klicken die angrenzenden Felder umschalten
-        # For-Schleife iteriert über die angrenzenden Felder
+        # Beim Klicken die angrenzenden Kacheln umschalten
+        # For-Schleife iteriert über die angrenzenden Kacheln
         for dx, dy in [(0, 0), (-1, 0), (1, 0), (0, -1), (0, 1)]:
-            # ny und ny sind die Koordinaten des jeweiligen Nachbarnfeldes
+            # ny und ny sind die Koordinaten der jeweiligen Nachbarkachel
             nx, ny = x + dx, y + dy
-            # Feld muss innerhalb des Rasters liegen
-            # Es wird nur umgeschaltet, wenn das Feld innerhalb des Spielbretts liegt
+            # Kachel muss innerhalb des Rasters liegen
+            # Es wird nur umgeschaltet, wenn die Kachel innerhalb des Spielbretts liegt
             if 0 <= nx < GRID_SIZE and 0 <= ny < GRID_SIZE:
                 self.states[ny][nx] ^= 1
                 self.game.itemconfig(self.fields[(nx, ny)], fill=self.get_color(nx, ny))
@@ -104,15 +105,16 @@ class LightsOut():
             self.show_win_message()
 
     def get_color(self, x, y):
-        # Gibt die Farbe des Feldes x y basierend auf dem Zustand zurück
+        # Gibt die Farbe der Kachel x y basierend auf dem Zustand zurück
         return "yellow" if self.states[y][x] == 1 else "black"
 
     def check_win(self):
-        # Prüfen, ob das Spiel gewonnen wurde (alle Felder sind schwarz)
+        # Prüfen, ob das Spiel gewonnen wurde (alle Kacheln sind 0 (schwarz))
+        # all ist eine Funktion, die True zurückgibt, wenn alle Elemente in der Liste 0 sind
         return all(not cell for row in self.states for cell in row)
 
     def show_win_message(self):
-        # Kreeiert ein neues Fenster, mit dem Titel "Gewonnen!"
+        # Erstellt ein neues Fenster, mit dem Titel "Gewonnen!"
         win_popup = tk.Toplevel(self.root)
         win_popup.title("Gewonnen!")
         # Kurze Nachricht, in wie vielen Zügen Spiel gewonnen wurde
@@ -123,15 +125,14 @@ class LightsOut():
 
     def solve(self):
         print("Lösen")
-        print(1/FIELD_SIZE+0.1)
         # Solver mit Zustandsmatrix aufrufen
-        keyMatrix = self.solver.solve(self.states)[0]
+        solutionMatrix = self.solver.solve(self.states)[0]
         # KeyMatrix ist die Lösung, welche Felder umgeschaltet werden müssen
         # For-Schleife iteriert über die Felder der Lösung
         for y in range(GRID_SIZE):
             for x in range(GRID_SIZE):
-                # Wenn das Feld in der KeyMatrix 1 ist (also geschaltet werden muss)
-                if keyMatrix[y][x] == 1:
+                # Wenn die Kachel in der KeyMatrix 1 ist (also geschaltet werden muss)
+                if solutionMatrix[y][x] == 1:
                     # Dann rufe die toggle Funktion auf diesem Feld auf
                     self.toggle(x, y)
                     # Kurze Pause, damit es ersichtlich ist, welches Feld geschaltet wurde

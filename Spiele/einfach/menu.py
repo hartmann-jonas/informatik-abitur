@@ -12,7 +12,7 @@ def showMenu():
         root.grid_columnconfigure(i, weight=1)
 
     # Label für den Titel
-    title_label = tk.Label(root, text="Lichter Aus", font=("Arial", 24))
+    title_label = tk.Label(root, text="Lichter Aus", font=("Arial", 32))
     title_label.grid(row=0, column=1, pady=200)
 
     # Button zum Starten des Spiels
@@ -26,7 +26,7 @@ def showMenu():
 def startGame():
     clearWindow()
     # Neue Spielinstanz starten
-    LightsOut(root)
+    LightsOut(root, showMenu)
 
 def clearWindow():
     # Alle Widgets im Fenster entfernen
@@ -37,6 +37,7 @@ def clearWindow():
 if __name__ == "__main__":
     root = tk.Tk()
     root.geometry("500x680")
+    root.attributes('-fullscreen',True)
 
     showMenu()
 

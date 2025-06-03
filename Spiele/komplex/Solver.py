@@ -5,9 +5,10 @@ class Solver:
     def __init__(self, size):
         self.size = size
         self.n = size * size
-        self.transitionMatrix = self._build_matrix()
+        # Übergangsmatrix initialisieren
+        self.transitionMatrix = self.build_matrix()
 
-    def _build_matrix(self):
+    def build_matrix(self):
         # Übergangsmatrix (Welche Lampe schaltet welche Lampen) erstellen
         A = np.zeros((self.n, self.n), dtype=int)
         for i in range(self.n):
@@ -19,7 +20,7 @@ class Solver:
         return A
 
     # Inverse der Übergangsmatrix in mod2
-    def _gauss_elimination(self, A, b):
+    def get_solutionMatrix(self, A, b):
         n = len(b)
         for i in range(n):
             if A[i][i] == 0:
@@ -45,14 +46,16 @@ class Solver:
         # Startzeit für die Berechnung
         timeStart = time.time()
         isSolvable = False
-        # Zustandsmatrix, die gelöst werden soll (grid)
-        stateMatrix = np.array([cell for row in grid for cell in row], dtype=int)
-        #print(f"StateMatrix: {stateMatrix}")
-        # Übergangsmatrix invertieren in mod2
-        solutionMatrix = self._gauss_elimination(self.transitionMatrix.copy(), stateMatrix.copy())
-        # Produkt
-        prod = np.linalg.matmul(self.transitionMatrix, solutionMatrix)
-        testMatrix = np.add(prod, stateMatrix)
+        # Zustandsmatrix, die gelöst werden soll
+        # 2D Array in 1D numpy Array umwandeln
+        stateVector = np.array([cell for row in grid for cell in row], dtype=int)
+        # Lösungsmatrix für gegebenes Feld
+        solutionMatrix = self.get_solutionMatrix(self.transitionMatrix.copy(), stateVector.copy())
+
+        # Überprüfen ob die Lösung gültig ist
+        # Übergangsmatrix * Lösung + Startzustand = Nullvektor b
+        # M x + a = b (Test auf Lösbarkeit)
+        testMatrix = np.add(np.linalg.matmul(self.transitionMatrix, solutionMatrix), stateVector)
         np.mod(testMatrix, 2, out=testMatrix)
 
         # Ist true, wenn die errechnete Lösung nur aus 0en besteht
@@ -61,7 +64,7 @@ class Solver:
 
         # Ist true, wenn die Startkonfiguration nicht nur 0en enthält
         # Dann wäre das Spielbrett bereits gelöst
-        startMatrix = np.any(stateMatrix)
+        startMatrix = np.any(stateVector)
 
         # Wenn beide Bedingungen erfüllt sind, dann ist das Spielbrett lösbar
         if allZeros and startMatrix:
@@ -70,6 +73,5 @@ class Solver:
         # 1D Array in 2D umwandeln
         solutionMatrix = np.reshape(solutionMatrix, (self.size, self.size))
 
-        #print([solutionMatrix, isSolvable])
         timeEnd = time.time()
         return[solutionMatrix, isSolvable, timeEnd - timeStart]
