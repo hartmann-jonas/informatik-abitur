@@ -64,19 +64,27 @@
     * Begrifflichkeiten
     * Material
     * Bibliotheken
-* **Programm 1 (einfach) – Seite x**
+* **Programm 1 (einfach) – Seite 6**
     * Übersicht
     * Pseudocode
     * Spielfeld
     * Validierung des Spielfeldes
     * Spielfeld als GUI
     * Umschalten der Felder
-* **Programm 2 (komplex) – Seite x**
+* **Programm 2 (komplex) – Seite 14**
     * Der komplexe Test auf Lösbarkeit
     * Implementierung
-* **Weiterentwicklung – Seite x**
-* **Quellen – Seite x**
-* **Quellcode – Seite x**
+* **Weiterentwicklung – Seite 18**
+* **Quellen – Seite 21**
+* **Quellcode – Seite 23**
+* **Deckblatt Präsentationsprüfung – Seite 41**
+* **Eidesstattliche Erklärung – Seite 42**
+
+<div style="height: 20vh;"></div>
+
+Hiermit versichere ich, dass ich die Präsentation selbsständig erarbeitetet, verfasst und alle benutzten Quellen und Hilfsmittel korrekt angegeben habe. Mir ist bekannt, dass bei nachgewiesenem Täuschungsversuch die Prüfung als "nicht bestanden" erklärt werden kann.  
+*Jonas Hartmann, 03.06.2025*
+
 
 <div style="page-break-after: always;"></div>
 
@@ -93,7 +101,7 @@ Dabei arbeitet man sich Zeile für Zeile auf dem Spielfeld nach unten, und schal
 Wenn nur Kacheln in der letzten Zeile leuchten gibt es verschiedene Kombinationen die man in der ersten Zeile wieder einschalten muss. Das wird dann wiederholt, bis alle Felder ausgeschaltet sind.
 
 ### Aufgabenstellung und Zielsetzung
-Ziel der Aufgabe war es das Spiel **Lichter Aus** für ein 5x5 Lampen großes Spielfeld in Java oder Python zu programmieren. Ich habe mich für Python entschieden.  
+Ziel der Aufgabe war es das Spiel **Lichter aus** für ein 5x5 Lampen großes Spielfeld in Java oder Python zu programmieren. Ich habe mich für Python entschieden.  
 Zusätzlich habe ich mir das Ziel gesetzt eine möglichst flexible Version des Spieles zu bauen, die auf jedem quadratischem Spielfeld funktioniert.
 
 <div style="page-break-after: always;"></div>
@@ -128,7 +136,7 @@ Diese unterscheiden sich nur in der Weise, wie sie die Spielbretter auf Lösbark
 ### Bibliotheken
 Um die Nutzeroberfläche zu erstellen nutzt das Programm die Bibliothek `Tkinter` diese wird standartmäßig zusammen mit Python installiert. 
 
-Die `komplex` Version von dem Programm nutzt zusätzlich noch `Numpy`. Das ist eine Bibliothek für wissenschaftliches Rechnen, um einfach mit Vektoren und Matrizen zu arbeiten. Sie wurde für den komplexen Test auf Lösbarkeit verwendet. Da dort mit Matrizen gerechnet werden muss.
+Die `komplex` Version von dem Programm nutzt zusätzlich noch `Numpy`. Das ist eine Bibliothek für wissenschaftliches Rechnen, um einfach mit Vektoren und Matrizen zu arbeiten. Sie wurde für den komplexen Test auf Lösbarkeit verwendet, da dort mit Matrizen gerechnet werden muss.
 
 <div style="page-break-after: always;"></div>
 
@@ -158,7 +166,7 @@ mainloop
 # Funktion die das Tkinter Fenster startet
 ```
 
-Die LightsOut Klasse in der `game.py` besitzt die folgende Funktionen.
+Die LightsOut Klasse in der `game.py` Datei besitzt die folgende Funktionen.
 ```py
 class LightsOut:
     def __init__():
@@ -237,7 +245,7 @@ states =
 ```
 `random.choice([0, 1])` füllt die jeweilige Position zufällig mit einer 0 oder einer 1.
 
-Daraus ergibt sich dann ein 2-dimensionalem Array welcher wie folgt aussieht:
+Daraus ergibt sich dann ein 2-dimensionaler Array, welcher wie folgt aussieht:
 ```py
 states  =  [[1,0,0,0,0],
             [0,1,0,1,0],
@@ -275,7 +283,7 @@ Dieser Test wurde von Jaap Scherphuis übernommen
 https://puzzling.stackexchange.com/a/123076 (01.06.2025)
 
 
-Im Code ist dieser Test  in der `generate_states` Funktion implementiert.
+Im Code ist dieser Test in der `generate_states` Funktion implementiert.
 
 Nachdem die Startzustände zufällig generiert wurden werden mit den Variablen `testSum1` und `testSum2` die Summen für den Test gebildet.
 
@@ -302,7 +310,7 @@ Sobald die Bedingung erfüllt ist, wird die While-Schleife geschlossen und der 2
 
 ### Spielfeld als graphische Oberfläche (GUI)
 Das Spiel benötigt jetzt eine Benutzeroberfläche die dieses Spielfeld abbildet. Dafür besitzt die LightsOut Klasse die `build_grid` Funktion.  
-Sie besteht aus zwei in einander liegenden For-Schleifen die je über die Größe der `GRID_SIZE` iterieren.
+Sie besteht aus zwei ineinander liegenden For-Schleifen die je über die Größe der `GRID_SIZE` iterieren.
 
 Für jede Kachel legen sie die `color` Variable fest.
 
@@ -660,13 +668,12 @@ def startGame():
     clearWindow()
     # Neue Spielinstanz starten
     LightsOut(root, showMenu)
-
+```
+```py
 def clearWindow():
     # Alle Widgets im Fenster entfernen
     for widget in root.winfo_children():
         widget.destroy()
-        
-
 if __name__ == "__main__":
     root = tk.Tk()
     root.geometry("500x680")
@@ -705,20 +712,19 @@ class LightsOut:
 
         # Spielfeld aufbauen
         self.build_grid()
-
     def generate_states(self):
         print("Generiere Zustände")
         # Run counter der die Durchläufe zählt,
         # bis eine lösbare Startkonfiguration gefunden wurde
         run = 1
-
+```
+```py
         # While-Schleife läuft solange, bis eine lösbare Konfiguration
         # gefunden wurde
         while True:
             # Zufällige Konfiguration bestehend aus 0 und 1 generieren
             states = [[random.choice([0, 1]) for _ in range(GRID_SIZE)]
                             for _ in range(GRID_SIZE)]
-                
             # Einfacher Test auf Lösbarkeit durch Summen
             # https://puzzling.stackexchange.com/a/123076
             sum1 = states[0][0]+states[0][1]+states[0][3]+states[0][4]
@@ -731,7 +737,6 @@ class LightsOut:
             # Run counter mit jedem Durchlauf erhöhen
             print(f"Try: {run}")
             run += 1
-            
             # Wenn beide Summen gerade sind, also die Konfiguration lösbar ist
             if sum1 % 2 == 0 and sum2 % 2 == 0:
                 # Dann wird die While-Schleife durchbrochen und
@@ -764,7 +769,6 @@ class LightsOut:
                 # self.toggle(x, y) aufruft
                 self.game.tag_bind(field, '<Button-1>', lambda event, x=x, y=y:
                                     self.toggle(x, y))
-
     # Toggle-Funktion um die Kacheln umschalten
     def toggle(self, x, y):
         # Beim Klicken die angrenzenden Kacheln umschalten
@@ -798,7 +802,6 @@ class LightsOut:
     def check_win(self):
         # Prüfen, ob das Spiel gewonnen wurde (alle Felder sind schwarz)
         return all(not cell for row in self.states for cell in row)
-
     # Popup-Fenster für Gewinnnachricht
     def show_win_message(self):
         # Kreeiert ein neues Fenster, mit dem Titel "Gewonnen!"
@@ -895,7 +898,8 @@ def showMenu():
     # Button zum Beenden des Spiels
     exit_button = tk.Button(root, text="Beenden", command=root.quit)
     exit_button.grid(row=4, column=1, pady=10)
-
+```
+```py
 def startGame(size_entry):
     # Größe des Spielfelds aus dem Eingabefeld holen
     gridSize = size_entry
@@ -953,6 +957,8 @@ class LightsOut():
         self.generate_states()
 
         self.build_grid()
+```
+```py
 
         self.move_count = 0
         self.round_count = 1
@@ -1154,6 +1160,8 @@ class Solver:
                         A[[i, j]] = A[[j, i]]
                         b[i], b[j] = b[j], b[i]
                         break
+```
+```py
             for j in range(i+1, n):
                 if A[j][i] == 1:
                     A[j] ^= A[i]
