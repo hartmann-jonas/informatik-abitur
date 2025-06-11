@@ -1,37 +1,20 @@
-import numpy as np
-import sympy as sp
+import random
+GRID_SIZE = 5  # Könnte dynamisch angepasst werden
 
-def mod2_inv(matrix):
-    n = matrix.shape[0]
-    # Create augmented matrix [A | I]
-    augmented = np.concatenate((matrix, np.eye(n, dtype=int)), axis=1)
-    print(np.linalg.det(augmented) % 2)
-    for i in range(n):
-        # Find pivot
-        if augmented[i, i] == 0:
-            # Swap with a row below that has a 1 in the ith column
-            for j in range(i+1, n):
-                if augmented[j, i] == 1:
-                    augmented[[i, j]] = augmented[[j, i]]
-                    break
-        else:
-            raise ValueError("Matrix is singular and not invertible in mod 2.")
-        
-        # Eliminate other rows
-        for j in range(n):
-            if j != i and augmented[j, i] == 1:
-                augmented[j] = (augmented[j] + augmented[i]) % 2
-    
-    # The right half is the inverse
-    return augmented[:, n:]
-
-# Example
-A = sp.Matrix([[1, 1, 1, 0],
-              [1, 1, 0, 1],
-              [1, 0, 1, 1],
-              [0, 1, 1, 1]])
-
-print(A.det() % 2)  # Check if determinant is non-zero mod 2
-
-A_inv = A.inv_mod(2) #mod2_inv(A)
-print("Inverse modulo 2:\n", A_inv)
+class LightsOut:
+    def generate_states(self):
+        # While-Schleife läuft solange, bis eine lösbare Konfiguration gefunden wurde
+        while True:
+            # Zufällige Konfiguration bestehend aus 0 und 1 generieren
+            states = [[random.choice([0, 1]) for _ in range(5)] for _ in range(5)]
+                
+            # Einfacher Test auf Lösbarkeit durch Summen
+            # https://puzzling.stackexchange.com/a/123076
+            sum1 = states[0][0]+states[0][1]+states[0][3]+states[0][4]+states[2][0]+states[2][1]+states[2][3]+states[2][4]+states[4][0]+states[4][1]+states[4][3]+states[4][4]
+            sum2 = states[0][0]+states[0][2]+states[0][4]+states[1][0]+states[1][2]+states[1][4]+states[3][0]+states[3][2]+states[3][4]+states[4][0]+states[4][2]+states[4][4]
+            
+            # Wenn beide Summen gerade sind, also die Konfiguration lösbar ist
+            if sum1 % 2 == 0 and sum2 % 2 == 0:
+                # Dann wird die While-Schleife durchbrochen und anschließend die Konfiguration zurückgegeben
+                break
+        return states

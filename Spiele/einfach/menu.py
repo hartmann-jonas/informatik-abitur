@@ -36,8 +36,8 @@ def clearWindow():
 
 if __name__ == "__main__":
     root = tk.Tk()
-    root.geometry("500x680")
-    root.attributes('-fullscreen',True)
+    root.geometry("500x690")
+    #root.attributes('-fullscreen',True)
 
     showMenu()
 

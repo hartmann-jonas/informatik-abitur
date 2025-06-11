@@ -116,8 +116,8 @@ Die einzelnen Felder des Spielfeldes bzw. die Lampen
 ### Material
 Das für die Prüfung abgegebene Material enthält die folgenden Dateien.
 ```
-|– README.md
-|– README.pdf
+|– Dokumentation.md
+|– Dokumentation.pdf
 |– debug.py
 |– Spiele
     |– einfach
